@@ -1,0 +1,291 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    margin:20px;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  h2 {
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+  
+  /* Estilos de las Tasks */
+  .task {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .task h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  
+  .task p {
+    margin-bottom: 5px;
+  }
+  
+  .task button {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 3px;
+    border: solid black 2px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .task button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Estilos de T.Members */
+  .member {
+    display: flex;
+    align-items: center;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .member img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .member-details {
+    flex-grow: 1;
+  }
+  
+  /* Button styles */
+  .button-container {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .button-container button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: solid black 2px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  
+  /* Estilos de Console */
+  .console {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 30px;
+  }
+  
+  .console pre {
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  /* Estilos Tasks */
+  .task-status {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .task-column {
+    flex: 1;
+    margin: 0 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .task-column h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  
+.add-task-form {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .add-task-form input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    width: 300px;
+  }
+  
+  .add-task-form button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: solid black 2px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .add-task-form button:hover {
+    background-color: #0056b3;
+  }
+
+  /* Estilos Members */
+.team-member {
+    display: inline-block;
+    margin-right: 20px;
+    text-align: center;
+  }
+  
+  .team-member img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+
+  #team-members-icons {
+    margin-bottom: 50px;
+    margin-left: 30px;
+    margin-right: 30px;
+    text-align: center;
+}
+
+
+#console-container button {
+  font-size: 16px;
+  margin:20px;
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: solid black 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#console-container button:hover {
+  background-color: #4D8C2E;
+}
+
+#team-members-icons img {
+  width: 100px;
+  height: 100px;
+}
+
+.Timeout {
+  background-color: #FFCDD2;
+  border: solid black 2px; 
+}
+
+.button-styled {
+  padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: solid black 2px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.date {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.date label {
+  margin-right: 10px;
+}
+
+.date input[type="date"]{
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: white;
+  color: black;
+  border: solid black 2px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin:20px;
+  transition: background-color 0.3s;
+}
+.date button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: solid black 2px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.date input[type="date"]:hover{
+  background-color: #87CEEB;
+}
+.date button:hover {
+  background-color: #0056b3;
+}
+
+.task-done {
+  position: relative;
+  z-index: 1;
+}
+
+.separacion-extra {
+  margin-left: 20px;
+}
+
+.task-done > div {
+  position: absolute;
+  top: 0;
+  left: -45px; 
+  transform: translateY(-50%) rotate(-45deg);
+  background-color: green;
+  color: white;
+  padding: 8px 13px;
+  border-radius: 5px;
+  border: solid black 1px;
+  font-weight: bold;
+  font-size: 17px;
+}
