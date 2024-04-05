@@ -24,7 +24,6 @@ function TeamMember(name, photo, identifier) {
 
 // Array para almacenar las tareas
 const tasks = [];
-//Agregar tareas ya hechas!!
 
 // Array para almacenar los miembros del equipo
 const teamMembers = [];
@@ -32,6 +31,12 @@ const teamMembers = [];
 function addTask() {
     const titleInput = document.getElementById("taskTitle");
     const title = titleInput.value;
+
+    // Verificar si tiene titulo
+    if (!title.trim()) {
+        alert("Todas las tareas deben tener un titulo. Por favor, inserte uno");
+        return;
+    }
 
     const descriptionInput = document.getElementById("taskDescription");
     const description = descriptionInput.value;
@@ -49,14 +54,13 @@ function addTask() {
     }
 
     // Crear instancia de Task 
-    const newTask = new Task(title, description, new Date(), "ToDo", selectedMember ? [selectedMember] : []);
-    //que tenga una fecha distinta a la de hoy!!! dependiendo de la prioridad que tega una fecha (alta =1 dia/ media = 1 semana/ baja = 1 mes) 
+    const newTask = new Task(title, description, calculateDueDate(priority), "ToDo", selectedMember ? [selectedMember] : []);
 
     // Agregar la prioridad a la tarea
     newTask.priority = priority;
 
     // Agregar la nueva tarea
-    tasks.unshift(newTask); // Insertar la tarea al principio del array de tareas
+    tasks.unshift(newTask);
 
     // Actualizar visualizacion
     renderTasksByState();
@@ -66,11 +70,43 @@ function addTask() {
     descriptionInput.value = '';
 }
 
+// Dia por Prioridad
+function calculateDueDate(priority) {
+    const currentDate = new Date();
+    switch (priority.toLowerCase()) {
+        case 'alta':
+            currentDate.setDate(currentDate.getDate() + 3); // 3 dias = alta
+            break;
+        case 'media':
+            currentDate.setDate(currentDate.getDate() + 7); // 1 semana = media
+            break;
+        case 'baja':
+            currentDate.setMonth(currentDate.getMonth() + 1); // 1 mes = baja
+            break;
+        default:
+            currentDate.setDate(currentDate.getDate() + 1); // Fecha por Defecto
+            break;
+    }
+    return currentDate;
+}
+
+//Referencia al Texto y Boton
+const dueDateInput = document.getElementById('dueDateInput');
+const updateDueDateButton = document.querySelector('.date button');
+
+// Listener del cuadro de texto
 function updateDueDate() {
+    // Verificar si el cuadro de texto tiene una fecha
+    if (!dueDateInput.value) {
+        // Alerta sin fecha
+        alert('Por favor, ingrese una fecha para actualizar');
+        return;
+    }
+    // Solicitar ID de tarea
     const taskId = parseInt(prompt("Ingrese el ID de la tarea a actualizar:"));
-    const dueDateInput = document.getElementById('dueDateInput');
     const newDueDate = new Date(dueDateInput.value);
     
+    // Mensaje de Tarea no encontrada
     if (isNaN(taskId) || taskId < 1 || taskId > tasks.length) {
         alert("ID de tarea no valido.");
         return;
@@ -78,10 +114,7 @@ function updateDueDate() {
 
     tasks[taskId - 1].dueDate = newDueDate;
 
-    // Comprobar si la fecha es anterior a la fecha actual
-    const currentDate = new Date();
-
-    // Renderizar las tareas actualizadas
+    // Renderizar tareas 
     renderTasksByState();
 }
 
@@ -89,12 +122,12 @@ const updateButton = document.querySelector('button');
 
 
 function renderTasksByState() {
-    // Referencias a los contenedores de las columnas Task
+    // Referencias columnas Task
     const tasksToDoContainer = document.getElementById('tasksToDo');
     const tasksInProgressContainer = document.getElementById('tasksInProgress');
     const tasksDoneContainer = document.getElementById('tasksDone');
 
-    // Limpiar los contenedores
+    // Vaciar Contenedores
     tasksToDoContainer.innerHTML = '';
     tasksInProgressContainer.innerHTML = '';
     tasksDoneContainer.innerHTML = '';
@@ -107,6 +140,7 @@ function renderTasksByState() {
         return sortedTasks.filter(task => task.state === state).length;
     }
 
+    // Contenido 
     tasksToDoContainer.innerHTML = `<h3>To Do (${countTasksByState('ToDo')})</h3>`;
     tasksInProgressContainer.innerHTML = `<h3>In Progress (${countTasksByState('InProgress')})</h3>`;
     tasksDoneContainer.innerHTML = `<h3>Done (${countTasksByState('Done')})</h3>`;
@@ -130,11 +164,12 @@ function renderTasksByState() {
             <div class="task-members"></div>
             <p>Creation Date: ${task.creationDate}</p>
             <p>Due Date: ${task.dueDate}</p>
-            <p>ID: ${task.id}</p>
-            <p>State: ${task.state}</p>
+            <p>Numero: ${task.id}</p>
+            <p>State: ${task.state}</p> 
             ${task.state === 'InProgress' ? `<input type="checkbox" onchange="moveTaskToDone(${index}, this)">Tarea Acabada` : ''}
 
         `;
+        // <p>ID: ${task.id}</p> data-id (cambiar nombre a id)
         
         // Obtener contenedor members 
         const taskMembersContainer = taskElement.querySelector('.task-members');
@@ -206,6 +241,7 @@ function dropMember(event) {
                 taskMembersContainer.appendChild(memberIcon);
 
                 renderTasksByState();
+                // Mensaje si intentan poner 1 member mas de 1 vez
             } else {
                 alert("Este miembro ya está asignado a la tarea.");
             }
@@ -286,6 +322,18 @@ const member5 = new TeamMember("Sara", "icono5.png", "005");
 // Incluirlos en Arrays
 teamMembers.push(member1, member2, member3, member4, member5);
 
+// Contenido Tareas por defecto
+addTaskDefault("Tarea1", "Tarea por Defecto", "baja", [member1, member2]);
+addTaskDefault("Tarea2", "Tarea por Defecto", "baja", [member3, member4]);
+addTaskDefault("Tarea3", "Tarea por Defecto", "baja", [member5]);
+
+// Agregar tareas por defecto
+function addTaskDefault(title, description, priority, members) {
+    const newTask = new Task(title, description, calculateDueDate(priority), "ToDo", members);
+    newTask.priority = priority;
+    tasks.unshift(newTask); // Agregar al Principio
+}
+
 renderTeamMembers();
 
 renderTasksByState();
@@ -317,7 +365,7 @@ function drop(event) {
     }
 }
 
-
+// Drag y Drop
 const tasksInProgressContainer = document.getElementById('tasksInProgress');
 tasksInProgressContainer.addEventListener('dragover', dragOver);
 tasksInProgressContainer.addEventListener('drop', drop);
@@ -327,29 +375,43 @@ function dragOver(event) {
     event.preventDefault();
 }
 
+// Cambiar la prioridad
 function changePriority() {
+    // Comprobar sque tarea busca
     const taskId = parseInt(prompt("Ingrese el ID:"));
     const task = tasks.find(task => task.id === taskId); 
 
+    // Si no encuentra la ID de la task salga mensaje
     if (!task) {
         alert("No hay una tarea con este ID, intentelo con otro ID.");
         return;
     }
 
+    // Seleccion de las categorias y evitar problemas con mayusculas
     let newPriority = prompt("Cual sera la nueva categoria?(Alta, Media o Baja):");
     const validPriorities = ["alta", "media", "baja"];
     newPriority = newPriority.toLowerCase(); 
 
+    // Si intenta poner otra cosa que no sea una de las prioridades
     if (!validPriorities.includes(newPriority)) {
         alert("Prioridad no aceptada, escoga entre 'Alta', 'Media' o 'Baja'.");
         return;
     }
 
-    // Asignar la nueva prioridad a la tarea
+    // Guardar fecha
+    const oldDueDate = task.dueDate;
+
+    // Asignar prioridad
     task.priority = newPriority;
 
+    // Cambiar Fecha
+    task.dueDate = calculateDueDate(newPriority);
+
+    // Actualizar visualización
     renderTasksByState();
+
 }
+
 
 
 // Informacion Arrays
