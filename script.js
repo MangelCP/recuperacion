@@ -28,24 +28,39 @@ const tasks = [];
 // Array para almacenar los miembros del equipo
 const teamMembers = [];
 
-function addTask() {
-    const titleInput = document.getElementById("taskTitle");
-    const title = titleInput.value;
+// Referencias de titulo y boton
+const titleInput = document.getElementById("taskTitle");
+const addTaskButton = document.getElementById("addTaskButton");
+addTaskButton.addEventListener("click", addTask);
 
-    // Verificar si tiene titulo
-    if (!title.trim()) {
-        alert("Todas las tareas deben tener un titulo. Por favor, inserte uno");
-        return;
+// Funcion de Deshabilitar Boton AddTask
+function checkTitleInput() {
+    // Comprobar si hay titulo
+    if (titleInput.value.trim()) {
+        // Habilitar boton si hay titulo
+        addTaskButton.disabled = false;
+    } else {
+        // Deshabilitar boton si no hay titulo
+        addTaskButton.disabled = true;
     }
+}
+
+// Listener del Titulo
+titleInput.addEventListener("input", checkTitleInput);
+
+// Deshabilitar boton al llamar a la pagina
+checkTitleInput();
+
+// Nueva Tarea
+function addTask() {
+    const title = titleInput.value;
 
     const descriptionInput = document.getElementById("taskDescription");
     const description = descriptionInput.value;
 
-    // Obtener la prioridad seleccionada
     const prioritySelect = document.getElementById("priority");
     const priority = prioritySelect.value;
 
-    // Conseguir el miembro seleccionado si hay alguno
     const selectedMemberRadio = document.querySelector('input[name="member"]:checked');
     let selectedMember = null;
     if (selectedMemberRadio) {
@@ -53,22 +68,27 @@ function addTask() {
         selectedMember = teamMembers.find(member => member.identifier === selectedMemberId);
     }
 
-    // Crear instancia de Task 
     const newTask = new Task(title, description, calculateDueDate(priority), "ToDo", selectedMember ? [selectedMember] : []);
 
-    // Agregar la prioridad a la tarea
     newTask.priority = priority;
 
-    // Agregar la nueva tarea
-    tasks.unshift(newTask);
+    tasks.push(newTask);
 
-    // Actualizar visualizacion
+    // Actualizar para ver resultados
     renderTasksByState();
 
-    // Limpiar el cuadro de texto
+    // Vaciar contenido
     titleInput.value = '';
     descriptionInput.value = '';
+
+    // Deshabilitar boton al finla
+    addTaskButton.disabled = true;
 }
+
+// Eliminar el event listener duplicado
+addTaskButton.removeEventListener("click", addTask);
+
+
 
 // Dia por Prioridad
 function calculateDueDate(priority) {
@@ -90,25 +110,38 @@ function calculateDueDate(priority) {
     return currentDate;
 }
 
-//Referencia al Texto y Boton
+// Referencia al Texto y Boton
 const dueDateInput = document.getElementById('dueDateInput');
 const updateDueDateButton = document.querySelector('.date button');
 
-// Listener del cuadro de texto
-function updateDueDate() {
-    // Verificar si el cuadro de texto tiene una fecha
-    if (!dueDateInput.value) {
-        // Alerta sin fecha
-        alert('Por favor, ingrese una fecha para actualizar');
-        return;
+// Funcion de Deshabilitar Boton Fecha
+function checkDueDateInput() {
+    // Ver si hay fecha seleccionada 
+    if (dueDateInput.value.trim()) {
+        // Si hay fecha, habilitar boton
+        updateDueDateButton.disabled = false;
+    } else {
+        // Si no hay fecha, deshabilitar boton
+        updateDueDateButton.disabled = true;
     }
+}
+
+// Listener cambios en input de fecha
+dueDateInput.addEventListener("input", checkDueDateInput);
+
+// Deshabilitado desde el Inicio
+checkDueDateInput();
+
+// Función para actualizar la fecha
+function updateDueDate() {
+    const newDueDate = new Date(dueDateInput.value);
+
     // Solicitar ID de tarea
     const taskId = parseInt(prompt("Ingrese el ID de la tarea a actualizar:"));
-    const newDueDate = new Date(dueDateInput.value);
     
-    // Mensaje de Tarea no encontrada
+    // Mensaje de tarea no encontrada
     if (isNaN(taskId) || taskId < 1 || taskId > tasks.length) {
-        alert("ID de tarea no valido.");
+        alert("ID de tarea no válido.");
         return;
     }
 
@@ -116,7 +149,15 @@ function updateDueDate() {
 
     // Renderizar tareas 
     renderTasksByState();
+
+    // Deshabilitar boton
+    updateDueDateButton.disabled = true;
+
+    // Datos por defecto
+    dueDateInput.value = '';
 }
+
+
 
 const updateButton = document.querySelector('button');
 
@@ -132,8 +173,9 @@ function renderTasksByState() {
     tasksInProgressContainer.innerHTML = '';
     tasksDoneContainer.innerHTML = '';
 
-    // Ordenar de las tareas
-    const sortedTasks = tasks.slice().sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime());
+    // Ordenar las tareas por ID de manera ascendente
+    const sortedTasks = tasks.slice().sort((a, b) => a.id - b.id);
+
 
     // Contar las tareas en cada estado
     function countTasksByState(state) {
@@ -149,8 +191,8 @@ function renderTasksByState() {
         const taskElement = document.createElement('div');
         taskElement.classList.add('task');
         taskElement.draggable = true;
-        taskElement.dataset.id = index;
-        taskElement.addEventListener('dragstart', (event) => dragStart(event, index)); 
+        taskElement.dataset.id = task.id;
+        taskElement.addEventListener('dragstart', (event) => dragStart(event)); 
 
         taskElement.innerHTML = `
         ${task.state === 'Done' ? `
@@ -169,7 +211,7 @@ function renderTasksByState() {
             ${task.state === 'InProgress' ? `<input type="checkbox" onchange="moveTaskToDone(${index}, this)">Tarea Acabada` : ''}
 
         `;
-        // <p>ID: ${task.id}</p> data-id (cambiar nombre a id)
+
         
         // Obtener contenedor members 
         const taskMembersContainer = taskElement.querySelector('.task-members');
@@ -181,7 +223,7 @@ function renderTasksByState() {
                 memberIcon.src = member.photo;
                 memberIcon.alt = member.name;
                 memberIcon.title = member.name;
-                memberIcon.style.width = "100px"; //Tamanio de los Icons
+                memberIcon.style.width = "100px"; //Grande de los Icons
                 taskMembersContainer.appendChild(memberIcon);
             });
         }
@@ -216,17 +258,17 @@ function dropMember(event) {
     const taskIdElement = event.target.closest('.task');
     if (!taskIdElement) return;
 
-    const taskId = taskIdElement.dataset.id; // Obtener identificador
+    const taskId = taskIdElement.dataset.id; // Obtener identificador de la tarea
     const memberId = event.dataTransfer.getData('text');
 
-    // Asignar el miembro tarea
-    const task = tasks[taskId];
+    // Encontrar la tarea correspondiente al ID
+    const task = tasks.find(task => task.id === parseInt(taskId));
     if (task) {
         const selectedMember = teamMembers.find(member => member.identifier === memberId);
         if (selectedMember) {
             const existingMember = task.members.find(member => member.identifier === selectedMember.identifier);
             
-            // Agregar si no esta
+            // Agregar si no está presente
             if (!existingMember) {
                 task.members.push(selectedMember);
 
@@ -241,7 +283,7 @@ function dropMember(event) {
                 taskMembersContainer.appendChild(memberIcon);
 
                 renderTasksByState();
-                // Mensaje si intentan poner 1 member mas de 1 vez
+                // Mensaje si intentan poner 1 miembro más de 1 vez
             } else {
                 alert("Este miembro ya está asignado a la tarea.");
             }
@@ -261,7 +303,6 @@ tasksToDoContainer.addEventListener("dragover", dragOver);
 tasksToDoContainer.addEventListener("drop", dropMember);
 
 
-// De InProgress a Done
 function moveTaskToDone(index, checkbox) {
     if (checkbox.checked) {
         // Obtener la tarea
@@ -287,30 +328,55 @@ function moveTaskToDone(index, checkbox) {
     }
 }
 
-function renderTeamMembers() {  
-  
-    const teamMembersDiv = document.getElementById("team-members"); 
 
+// Agrega esta función para generar la información del miembro
+function generateMemberInfo(member) {
+    const memberInfo = document.createElement('div');
+    memberInfo.classList.add('member-info');
+    memberInfo.innerHTML = `
+        <p>Nombre: ${member.name}</p>
+        <p>ID: ${member.identifier}</p>
+        <p>Tareas Realizadas: ${member.tasksDone}</p>
+    `;
+    return memberInfo;
+}
 
-    teamMembersDiv.innerHTML = "";    
+// Actualiza la función renderTeamMembers() para agregar la información del miembro debajo de las imágenes
+function renderTeamMembers() {
+    const memberElements = document.querySelectorAll("#team-members-icons img");
 
-  
-    teamMembers.forEach(member => { 
-        // div de members
-        const memberDiv = document.createElement("div");
-        memberDiv.classList.add("team-member");
+    memberElements.forEach(memberElement => {
+        // Obtener datos del miembro
+        const memberId = memberElement.dataset.id;
+        const member = teamMembers.find(member => member.identifier === memberId);
 
-        // Informacion de Members 
-        memberDiv.innerHTML = `
-            <img src="${member.photo}" alt="${member.name}">
-            <p>Nombre: ${member.name}</p>
-            <p>ID: ${member.identifier}</p>
-            <p>Tareas Realizadas: ${member.tasksDone}</p>
-        `;
-
-        teamMembersDiv.appendChild(memberDiv);
+        // Verificar si ya se agregaron los datos del miembro
+        const existingMemberInfo = memberElement.nextElementSibling;
+        if (existingMemberInfo && existingMemberInfo.classList.contains('member-info')) {
+            existingMemberInfo.innerHTML = `
+                <p>Nombre: ${member.name}</p>
+                <p>ID: ${member.identifier}</p>
+                <p>Tareas Realizadas: ${member.tasksDone}</p>
+            `;
+        } else {
+            // Agregar datos del miembro al lado del icono de selección
+            if (member) {
+                const memberInfo = document.createElement('div');
+                memberInfo.classList.add('member-info');
+                memberInfo.innerHTML = `
+                    <p>Nombre: ${member.name}</p>
+                    <p>ID: ${member.identifier}</p>
+                    <p>Tareas Realizadas: ${member.tasksDone}</p>
+                `;
+                memberElement.parentNode.insertBefore(memberInfo, memberElement.nextSibling);
+            }
+        }
     });
 }
+
+
+
+
 
 // Datos de los miembros y mas
 const member1 = new TeamMember("Jose", "icono1.png", "001");
@@ -331,7 +397,7 @@ addTaskDefault("Tarea3", "Tarea por Defecto", "baja", [member5]);
 function addTaskDefault(title, description, priority, members) {
     const newTask = new Task(title, description, calculateDueDate(priority), "ToDo", members);
     newTask.priority = priority;
-    tasks.unshift(newTask); // Agregar al Principio
+    tasks.push(newTask); // Agregar al Principio
 }
 
 renderTeamMembers();
@@ -347,23 +413,23 @@ function dragStart(event) {
 function drop(event) {
     event.preventDefault();
     const taskId = event.dataTransfer.getData('text/plain');
-    const taskIndex = parseInt(taskId);
     const taskElement = document.querySelector(`[data-id="${taskId}"]`);
     const tasksInProgressContainer = document.getElementById('tasksInProgress');
-    
-    // Ver si tiene un member
-    if (tasks[taskIndex].state === 'ToDo' && tasks[taskIndex].members.length > 0) {
+
+    // Verificar si tiene un miembro
+    const task = tasks.find(task => task.id === parseInt(taskId));
+    if (task && task.state === 'ToDo' && task.members.length > 0) {
         tasksInProgressContainer.appendChild(taskElement);
         
-        // Actualizar a InProgress
-        tasks[taskIndex].state = 'InProgress';
+        // Actualizar el estado a InProgress
+        task.state = 'InProgress';
         
         renderTasksByState();
     } else {
-
-        alert("Debes asignarle un encargado.");
+        alert("Debe asignarle un encargado.");
     }
 }
+
 
 // Drag y Drop
 const tasksInProgressContainer = document.getElementById('tasksInProgress');
@@ -456,4 +522,3 @@ function displayTasks(state) {
 function displayMembers() {
     alert(JSON.stringify(teamMembers, null, 2));
 }
- 

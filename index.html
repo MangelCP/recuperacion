@@ -19,28 +19,25 @@
     </select>
   
     <div id="boton">
-      <button onclick="addTask()">Nueva Task</button>  
-    </div>
-    <div id="team-members-icons">
-      <h2>Seleccione Members para las Tasks</h2>
-      <img src="icono1.png" alt="Miembro 1" draggable="true" ondragstart="dragMember(event, '001')">
-      <img src="icono2.png" alt="Miembro 2" draggable="true" ondragstart="dragMember(event, '002')">
-      <img src="icono3.png" alt="Miembro 3" draggable="true" ondragstart="dragMember(event, '003')">
-      <img src="icono4.png" alt="Miembro 4" draggable="true" ondragstart="dragMember(event, '004')">
-      <img src="icono5.png" alt="Miembro 5" draggable="true" ondragstart="dragMember(event, '005')">  
+      <button id="addTaskButton" onclick="addTask()" title="Ponga un titulo si quiere agregar una tarea">Nueva Tarea</button>  
     </div>
 
 </div>
   <div class="date"> 
     <input type="date" id="dueDateInput"> 
-    <button onclick="updateDueDate()">Actualizar Fecha</button> 
+    <button id="updateDueDate" onclick="updateDueDate()" title="Ponga una fecha si quiere actualizar la tarea">Actualizar Fecha</button> 
     <button onclick="changePriority()" class="separacion-extra">Cambiar Prioridad</button> 
   </div>  
- 
-  <h2>Team Members</h2>
-  <div id="team-members">
-    
+
+  <div id="team-members-icons">
+    <h2>Seleccione Members para las Tasks</h2>
+    <img src="icono1.png" alt="Miembro 1" draggable="true" data-id="001" ondragstart="dragMember(event, '001')">
+    <img src="icono2.png" alt="Miembro 2" draggable="true" data-id="002" ondragstart="dragMember(event, '002')">
+    <img src="icono3.png" alt="Miembro 3" draggable="true" data-id="003" ondragstart="dragMember(event, '003')">
+    <img src="icono4.png" alt="Miembro 4" draggable="true" data-id="004" ondragstart="dragMember(event, '004')">
+    <img src="icono5.png" alt="Miembro 5" draggable="true" data-id="005" ondragstart="dragMember(event, '005')">  
   </div>
+ 
 
   <h2>Task Status</h2>
   <div class="task-status">

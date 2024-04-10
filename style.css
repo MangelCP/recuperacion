@@ -45,6 +45,7 @@ body {
   h2 {
     margin-top: 30px;
     margin-bottom: 10px;
+    margin-right: 10px;
   }
   
   /* Estilos de las Tasks */
@@ -102,12 +103,23 @@ body {
   #boton button {
     margin-left: 20px;
 }
+
+#addTaskButton:disabled {
+  background-color: #cccccc; /* Cambia el color de fondo a gris */
+  color: #666666; /* Cambia el color del texto a un tono más oscuro */
+}
+
+#updateDueDate:disabled {
+  background-color: #cccccc; /* Cambia el color de fondo a gris */
+  color: #666666; /* Cambia el color del texto a un tono más oscuro */
+}
+
   
   .member-details {
     flex-grow: 1;
   }
 
-  /* Estilo  Casilla de seleccion Prioridad */
+  /* Estilo Casilla de seleccion Prioridad */
   #priority {
     font-size: 18px; 
   }
@@ -130,23 +142,22 @@ body {
   .task-status {
     display: flex;
     justify-content: space-between;
-  }
-  
-  .task-column {
-    flex: 1;
-    margin: 0 10px;
+}
+
+.task-column {
+    flex: 0 1 30%; 
     padding: 10px;
     background-color: #f8f9fa;
     border: 1px solid #dee2e6;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .task-column h3 {
+}
+
+.task-column h3 {
     margin-top: 0;
     margin-bottom: 10px;
-    text-align: center;
-  }
+    font-size: 16px; 
+}
   
     /* Estilos cuadro tareas */
   .add-task-form {
@@ -182,28 +193,28 @@ body {
   }
 
   /* Estilos Members */
-.team-member {
-    display: inline-block;
-    margin-right: 20px;
-    text-align: center;
-  }
-  
-  /* Estilos Imagenes miembros */
-  .team-member img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 5px;
-  }
-
   #team-members-icons {
     margin-bottom: 50px;
     margin-left: 30px;
     margin-right: 30px;
     text-align: center;
+    display: flex;
+    justify-content: center;
 }
+
+.team-member {
+    margin-right: 20px;
+    text-align: center;
+}
+
+.team-member img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 5px; /* Añadimos un margen inferior para separar el texto */
+}
+
+
 
 /*Estilos de botones array*/
 #console-container button {
@@ -297,4 +308,13 @@ body {
   border: solid black 1px;
   font-weight: bold;
   font-size: 17px;
+}
+
+.team-member {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.member-info {
+  text-align: center;
 }
